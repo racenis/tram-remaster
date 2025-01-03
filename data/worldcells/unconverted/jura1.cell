@@ -1,0 +1,17 @@
+tram test-tram1 -46 7.3 41 0 3.14 0 tram-activate tatra tatra tatrabogey
+staticwobj jura1 0 0 0 0 0 0 none jura1 jura1
+staticwobj jurarail 0 0 0 0 0 0 none jura1rail jura1rail
+staticwobj udens1 0 0 0 0 0 0 none udens1 fullbright
+#
+staticwobj bingus-chair -91.0 0.0 10.0 0.0 4.20 0.0 none chair chair
+mongus bingus -91.0 0.85 10.0 0.0 4.20 0.0 bingus-activate bingus
+#
+crate cr1 -72.97909545898438 4.117450714111328 15.389862060546875 0.0 0.0 -0.0 none crate_plain crate
+crate cr2 -72.68818664550781 5.143822193145752 14.747958183288574 0.0 0.15453384816646576 0.0 none crate_ligma crate
+crate cr3 -72.46704864501953 4.117450714111328 14.272699356079102 0.0 -0.5364950299263 0.0 none crate_plain crate
+#
+bus test-bus1 -66 2.3 41 0 0 0 none raf raf raf_wheel
+mongus floppa 1 1.6 104 0 3.14 0 floppa-activate floppa
+#
+staticwobj tt 100 0 100 0 2.0 0 none teika-teatris fullbright
+#mongus monga -91.0 1.85 15.0 0 1.57 0 none mongus

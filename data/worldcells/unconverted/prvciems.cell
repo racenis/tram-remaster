@@ -1,0 +1,17 @@
+staticwobj prvciems 0 0 0 0 0 0 none prvcmiems fullbright
+staticwobj prvciemsb 0 0 0 0 -0.76232840134 0 none prvcmiemsb fullbright
+bus test-bus1 0 2.3 0 0 0 0 none raf raf raf_wheel
+#
+staticwobj teika 2942 1 -1901 0 0.5235 0 none maps/teika/teika fullbright
+staticwobj teika2 2972 1 -1801 0 0.5235 0 none maps/teika/teika_teatris teika/teika_teatris
+staticwobj teika3 2995 1 -1861 0 2.0942 0 none maps/teika/brivibas_lielvardes teika/brivibas_lielvardes
+bus test-bus2 2942 2 -1901 0 0 0 none raf raf raf_wheel
+#
+#
+#
+staticwobj aa1 2165 0 -1670 0 -1.57 0 none maps/vefs/vefpils fullbright
+staticwobj aa2 2244 0 -1695 0 -0.78 0 none maps/vefs/telefonu_maja fullbright
+staticwobj aa3 2140 0 -1450 0 3.92 0 none maps/vefs/brivibas_zemgala fullbright
+staticwobj aa4 2070 0 -1410 0 3.92 0 none maps/vefs/brivibas226b fullbright
+staticwobj aa5 1920 0 -1300 0 0.78 0 none maps/vefs/brivibas_berzaunes fullbright
+staticwobj aa6 1710 0 -1280 0 5.49 0 none maps/vefs/brivibas193 fullbright

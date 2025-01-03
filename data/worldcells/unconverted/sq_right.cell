@@ -1,0 +1,4 @@
+staticwobj square-middle 0 0 0 0 0 0 none square10x10 fullbright
+crate cr1 0.0 0.5 -0.0 0.0 -0.44086819887161255 0.0 none crate_plain crate
+crate cr2 -1.4390405416488647 0.5 -0.26871293783187866 0.0 0.13786320388317108 0.0 none crate_plain crate
+crate cr3 -0.6620272397994995 1.5 -0.2509993314743042 0.0 -0.01609540916979313 0.0 none crate_plain crate

@@ -1,0 +1,6 @@
+staticwobj jura2 0 0 0 0 0 0 none jura2 jura2
+staticwobj udens2 0 0 0 0 0 0 none udens2 fullbright
+staticwobj piena-veikals -625.0 3.1000001430511475 634.0 0.0 2.6179938316345215 0.0 none piena_veikals piena_veikals
+staticwobj piena-sign -696.0 2.200000047683716 596.0 0.0 0.7853981852531433 0.0 none piena_veikals_sign piena_veikals_sign
+staticwobj redeles 0.0 0.0 0.0 0.0 0.0 0.0 none redeles redeles
+staticwobj jura3 0 0 0 0 0 0 none jura3 fullbright

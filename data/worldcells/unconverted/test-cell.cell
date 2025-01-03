@@ -1,0 +1,19 @@
+#staticwobj phouse3 0 3 0 0 0 0 none monkecube monkemap
+#staticwobj phouse4 0 5 0 0 0 0 none monkecube monkemap
+#staticwobj phouse5 0 4 0 0 0 0 none monkecube monkemap
+#staticwobj phouse6 0 6 0 0 0 0 none monkecube monkemap
+staticwobj phouse1 -50 0 0 0 0.75 0 none bibe dingadong
+staticwobj phouse2 -6 0 0 0 3.14 0 none th2 dingalingo
+lamp lampo 1.0 0.0 -1.0 0 0 0 none 1.0 1.0 1.0 20.0
+#staticwobj tunnle 15.0 0.0 15.0 0.0 0.0 0.0 none BTunnel BTunnel
+#staticwobj tunnlein 15.0 0.0 15.0 0.0 0.0 0.0 none BTunnelInterior BTunnelInterior
+#staticwobj tunnledor 25.0 1.25 23.95 0.0 0.0 0.0 none BTunnelDoor BTunnelDoor
+#crate cratemonke 0.0 100.0 0.0 0.0 0.0 0.0 none dmonke dmonke
+#crate cr1 3 1 3 0 0.75 0 none crate_plain crate
+#crate cr2 5 1 3 0 0 0 crate-action crate_ligma crate
+#crate cr3 7 1 3.5 0 0 0 none barrel barrel
+#crate cr3 7.5 1 4.5 0 0 0 none big_barrel big_barrel
+#crate cr4 9 1 4.5 0 0 0 none mongus big_barrel
+tram test-tram1 10 2 -10 0 0.0 0 none tatra tatra tatrabogey
+staticwobj asfdfhlhjhjkhl 30 0 -20 0 3.14 0 none th2 dingalingo
+#only remove this line when the loader is fixed

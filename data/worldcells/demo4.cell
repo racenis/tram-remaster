@@ -1,0 +1,49 @@
+CELLv3 cell 0 0
+decoration 0 test-tram1 0 -192 7 30 0 3.14 0 0 tatra none
+staticwobj 0 test-tram2 0 -188.52 5.65 12.97 0 3.14 0 crate fullbright
+staticwobj 0 test-tram3 0 34.46 5.65 100.19 0 3.14 0 crate fullbright
+decoration 0 floppa 0 -180 5 25 0 1.56 0 0 floppa floppa-idle
+staticwobj 0 level1 0 0 0 0 0 0 0 NEWMAP lightmap/NEWMAP
+staticwobj 0 jurarail 0 0 0 0 0 0 0 jura1rail lightmap/jura1rail
+staticwobj 0 sliede 0 0 0 0 0 0 0 sliede lightmap/sliede
+staticwobj 0 kakis-garaza 0 0 0 0 0 0 0 kakis-garaza lightmap/kakis-garaza
+staticwobj 0 pagrabs4 0 0 0 0 0 0 0 pagrabs4 lightmap/pagrabs4
+staticwobj 0 fabrika-seta 0 -17 0 73 0 0 0 fabrika-seta lightmap/fabrika-seta
+staticwobj 0 udens1 0 0 0 0 0 0 0 uudenis fullbright
+decoration 0 monga 0 -10 12.1 72.5 0 1.57 0 0 mongus mongus-sway
+#
+staticwobj 0 bingus-chair 0 -72.0 5.05 17.0 0.0 3.0 0.0 chair lightmap/chair
+decoration 0 bingus 0 -72.0 5.90 17.0 0.0 3.0 0.0 0 bingus bingus-idle
+#
+crate 0 cr1 0 -128.05 4.5 19.6 0 0 0 crate_plain crate
+crate 0 cr2 0 -129.25 4.5 19.6 0 0 0 crate_ligma crate
+crate 0 cr3 0 -128.65 5.5 19.6 0 0 0 crate_plain crate
+crate 0 cr4 0 -23.7 7.75 68.4 0 0 0 big_barrel big_barrel
+crate 0 cr5 0 -26 7.75 69 0 0 0 big_barrel big_barrel
+crate 0 cr6 0 -26.6 7.75 71.9 big_barrel big_barrel
+#
+decoration 0 test-bus1 0 9.4607 7.4 -3.9835 0 3.14 0 0 raf none
+#
+#staticwobj tt 100 0 100 0 2.0 0 none teika-teatris fullbright
+#mongus monga -91.0 1.85 15.0 0 1.57 0 none mongus
+#
+#
+staticwobj 0 ciemaziime1 0 41.3 6 27.4 0 1.04719755 0 ciemaziime fullbright
+staticwobj 0 kakismaja 0 0 6.5 0 0 0 0 kakismaja lightmap/kakismaja
+staticwobj 0 kakispagalms 0 0 0 0 0 0 0 kakispagalms lightmap/kakispagalms
+staticwobj 0 maja1 0 -113 4 15 0 0 0 maja1 lightmap/maja1
+staticwobj 0 maja1pagalms 0 0 0 0 0 0 0 maja1pagalms lightmap/maja1pagalms
+staticwobj 0 garaza1 0 -101.51 4 17.073 0 -0.157079633 0 garaza1 lightmap/garaza1
+staticwobj 0 maja2 0 -116 4 33 0 0 0 maja2 lightmap/maja2
+staticwobj 0 fabrika 0 -17 7 72.5 0 0 0 fabrika lightmap/fabrika
+staticwobj 0 pienamaja 0 -182 4 5 0 -0.628318531 0 pienamaja lightmap/pienamaja
+staticwobj 0 hes 0 -113 1 -29 0 0 0 hes lightmap/hesl
+#
+# piena veikals
+staticwobj 0 piena-veikals 0 -140 4.3 13 0 0 0 piena_veikals lightmap/piena_veikals
+staticwobj 0 piena-veikals-ieksa 0 -140 4.3 13 0 0 0 piena_veikals_ieksa lightmap/piena_veikals_ieksa
+# pieni
+crate 0 pp1 0 -139 5.7 14.8 0 3 0 pienapaka pienapaka
+crate 0 pp2 0 -138 5.7 14.4 0 2.3 0 pienapaka pienapaka
+crate 0 pp3 0 -138.4 5.7 14.6 0 1.3 0 pienapaka pienapaka
+crate 0 pp4 0 -138.7 5.7 14.9 0 0.23 0 pienapaka pienapaka

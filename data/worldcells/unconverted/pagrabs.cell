@@ -1,0 +1,4 @@
+staticwobj pagrabs 0.0 0.0 0.0 0.0 0.0 0.0 none pagrabs_ieksa pagrabs_ieksa
+lamp lampo 3.5 -1 116 0 0 0 none 1.0 0.41688 0.0 10.0
+crate cr7 3.5 -1.5 117 0 1.57 0.0 none pienapaka pienapaka
+#mongus pagrabs-mongus 3.5 -3.0 120 0 0 0 mongus-activate mongus

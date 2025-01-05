@@ -183,3 +183,4 @@ skybox3 flat linear metal 1.0 1.0 1.0 0.0 1.0 0.0 same
 skybox4 flat linear metal 1.0 1.0 1.0 0.0 1.0 0.0 same
 skybox5 flat linear metal 1.0 1.0 1.0 0.0 1.0 0.0 same
 skybox6 flat linear metal 1.0 1.0 1.0 0.0 1.0 0.0 same
+snack			alpha	linear	metal	1.0 1.0 1.0	1.0 8.0 0.0 same

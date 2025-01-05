@@ -9,6 +9,7 @@
 #include <framework/stats.h>
 #include <framework/worldcell.h>
 #include <framework/language.h>
+#include <framework/path.h>
 #include <audio/audio.h>
 #include <audio/sound.h>
 #include <render/render.h>
@@ -51,6 +52,14 @@ enum {
 
 int dialog = DIALOG_NONE;
 
+int collected_milk = 0;
+bool accept_milk_quest = false;
+bool finish_milk_quest = false;
+
+bool started_tramming = false;
+bool finished_tramming = false;
+static double time_started_tramming = -1;
+
 class LogicController : public Entity {
 public:
     LogicController(name_t name) : Entity(name) {}
@@ -67,7 +76,11 @@ public:
 		if (trigger == "bingus") {
 			dialog = BINGUS_HELLO;
 			
-			UI::SetState(UI::MENU_OPEN);
+			UI::SetInputState(UI::STATE_MENU_OPEN);
+		}
+		
+		if (trigger == "milk") {
+			collected_milk++;
 		}
 		
 		// TODO: implement
@@ -80,18 +93,10 @@ public:
     }
 };
 
-/*
-bingus-hello Kas augšā, mājniek?
-bingus-q-whatup Ko notiek?
-bingus-a-whatup Še, piecītis, atnes pienu. No piena veikala. Piena veikalā ir piens.
-bingus-q-wherepee Kur var pačurāt?
-bingus-a-wherepee vnks ieej ezerā un pačurā :DD lol
-bingus-q-pook Hmm.. ok.
-bingus-a-pook Vēl jautājumi?
-bingus-q-kbye Atā
-bingus-q-heremilk Svaigs piens no piena veikala [atdot pienu]
-bingus-a-heremilk Mmmm... piens ....
-*/
+
+
+static PathFollower* tram_follower_a = nullptr;
+static PathFollower* tram_follower_b = nullptr;
 
 static Player* player = nullptr;
 
@@ -143,6 +148,9 @@ int main() {
 	Animation::Find("mongus-sway")->Load();
 	Animation::Find("floppa-idle")->Load();
 	Animation::Find("bingus-idle")->Load();
+	
+	Path::Find("tram-a")->LoadFromDisk();
+	Path::Find("tram-b")->LoadFromDisk();
 	
 	/*Animation::Find("LinuxIdle")->Load();
 	Animation::Find("LinuxCrash")->Load();
@@ -301,8 +309,9 @@ int main() {
 	player = new Player;
 	//player->SetLocation(vec3(0.0f, (1.85f/2.0f) + 0.05f, 0.0f));
 	//player->SetLocation(vec3(0.0f, (1.85f/2.0f) + 10.05f, 0.0f));
-	//player->SetLocation(Entity::Find("player-start")->GetLocation());
-	player->SetLocation(vec3(0.0f, 50.0f, 0.0f));
+	player->SetLocation(Entity::Find("player-start")->GetLocation());
+	//player->SetLocation(Entity::Find("bingus")->GetLocation() + vec3(0, 10, 0));
+	//player->SetLocation(vec3(0.0f, 50.0f, 0.0f));
 	player->Load();
 
 	camera = new Ext::Camera::FirstPersonCamera;
@@ -390,12 +399,18 @@ int main() {
         
         auto result = Physics::Raycast(start, start + 2.0f * direction, -1 ^ Physics::COLL_TRIGGER);
 
+		
+		
         if (result.collider) {
+			std::cout << result.collider << " " << result.collider->GetParent()->GetName() << std::endl;
             Message::Send({Message::ACTIVATE_ONCE, player->GetID(), result.collider->GetParent()->GetID(), 0});
         }
     });
 	
+	tram_follower_a = new PathFollower(Path::Find("tram-a"), Entity::Find("test-tram1")->GetLocation(), PATH_LINEAR);
+	tram_follower_b = new PathFollower(Path::Find("tram-b"), Entity::Find("test-tram1")->GetLocation(), PATH_LINEAR);
 	
+	tram_follower_b->Advance(8.0f);
 	
 	//Physics::DRAW_PHYSICS_DEBUG = true;
 
@@ -474,20 +489,144 @@ void main_loop() {
 	frames++;
 	
 	
-	
+	/*
+bingus-hello Kas augšā, mājniek?
+bingus-q-whatup Ko notiek?
+bingus-a-whatup Še, piecītis, atnes pienu. No piena veikala. Piena veikalā ir piens.
+bingus-q-wherepee Kur var pačurāt?
+bingus-a-wherepee vnks ieej ezerā un pačurā :DD lol
+bingus-q-pook Hmm.. ok.
+bingus-a-pook Vēl jautājumi?
+bingus-q-kbye Atā
+bingus-q-heremilk Svaigs piens no piena veikala [atdot pienu]
+bingus-a-heremilk Mmmm... piens ....
+*/
 	
 	GUI::Begin();
 	Ext::Menu::Update();
 	
 	if (dialog != DIALOG_NONE) {
-		//GUI::PushFrameRelative(GUI::)
+		GUI::PushFrameRelative(GUI::FRAME_CENTER_HORIZONTAL, 400);
+		GUI::PushFrameRelative(GUI::FRAME_BOTTOM, 200);
 		
+		GUI::PushFrameRelative(GUI::FRAME_TOP, 25);
+		GUI::FillFrame(GUI::WIDGET_REVERSE_WINDOW);
+		GUI::PushFrameRelative(GUI::FRAME_INSET, 5);
+		//GUI::SetColor(COLOR_WHITE);
+		//GUI::SetFont(Ext::Menu::FONT_TEXT_BOLD);
+		switch (dialog) {
+			case DIALOG_NONE:
+	
+			case BINGUS_HELLO:
+				GUI::Text(Language::Get("bingus-hello")); break;
+			case BINGUS_WHATUP:
+				GUI::Text(Language::Get("bingus-a-whatup")); break;
+			case BINUGS_WHERE_PEE:
+				GUI::Text(Language::Get("bingus-a-wherepee")); break;
+			case BINUGS_PEE_OK:
+				GUI::Text(Language::Get("bingus-a-pook")); break;
+			case BINUGS_HERE_MILK:
+				GUI::Text(Language::Get("bingus-a-heremilk")); break;
+		}
+		//GUI::RestoreFont();
+		//GUI::RestoreColor();
+		GUI::PopFrame();
+		GUI::PopFrame();
+
+		GUI::NewLine();
+		GUI::NewLine();
 		
+		switch (dialog) {
+			case DIALOG_NONE:
+			
+			case BINUGS_HERE_MILK:
+			case BINUGS_PEE_OK:
+			case BINGUS_WHATUP:
+			case BINGUS_HELLO:
+				if (!accept_milk_quest) {
+					if (GUI::Button(Language::Get("bingus-q-whatup"))) {
+						dialog = BINGUS_WHATUP;
+						accept_milk_quest = true;
+					}
+					GUI::NewLine();
+				}
+				
+				if (accept_milk_quest && collected_milk) {
+					if (GUI::Button(Language::Get("bingus-q-heremilk"))) {
+						dialog = BINUGS_HERE_MILK;
+						collected_milk = 0;
+						finish_milk_quest = true;
+					}
+					GUI::NewLine();
+				}
+				
+				if (GUI::Button(Language::Get("bingus-q-wherepee"))) {
+					dialog = BINUGS_WHERE_PEE;
+				}
+				GUI::NewLine();
+				
+				if (GUI::Button(Language::Get("bingus-q-kbye"))) {
+					dialog = DIALOG_NONE;
+					UI::SetInputState(UI::STATE_DEFAULT);
+				};
+				
+				break;
+			
+			case BINUGS_WHERE_PEE:
+				if (GUI::Button(Language::Get("bingus-q-pook"))) {
+					dialog = BINUGS_PEE_OK;
+				}
+				
+				break;
+		}
 		
+		GUI::PopFrame();
+		GUI::PopFrame();
 	}
 	
 	GUI::End();
 	GUI::Update();
+	
+	
+	if (GetTickTime() > 5) {started_tramming = true; if(time_started_tramming < 0) {time_started_tramming = GetTickTime();}}
+	
+	if (started_tramming && !finished_tramming) {
+		float speed = 2.0f;
+		
+		double time_since_started = GetTickTime() - time_started_tramming;
+		
+		if (time_since_started > 60.0) {
+			speed *= (time_since_started / 15.0) - 3.0;
+		}
+		
+		if (GetTick() % 60 == 0) std::cout << GetTickTime() - time_started_tramming << " speed " << speed <<  std::endl;
+		
+		Render::AddLineMarker(tram_follower_a->GetPosition(), Render::COLOR_GREEN);
+		Render::AddLineMarker(tram_follower_b->GetPosition(), Render::COLOR_RED);
+		
+		Path::Find("tram-a")->Draw();
+
+		vec3 mid = glm::mix(tram_follower_a->GetPosition(), tram_follower_b->GetPosition(), 0.5f);
+		vec3 dir = glm::normalize(tram_follower_b->GetPosition() - tram_follower_a->GetPosition());
+		
+		mid.y += 0.5f;
+		
+		Entity::Find("test-tram1")->SetLocation(mid);
+		Entity::Find("test-tram1")->SetRotation(glm::quatLookAt(dir, DIRECTION_UP));
+		
+		tram_follower_a->Advance(GetDeltaTime() * speed);
+		tram_follower_b->Advance(GetDeltaTime() * speed);
+		
+		if (glm::distance(tram_follower_a->GetPosition(), tram_follower_b->GetPosition()) > 12.0f) {
+			tram_follower_a->Advance(GetDeltaTime());
+		}
+		
+		if (time_since_started > 115.0) {
+			finished_tramming = true;
+		}
+	}
+	
+	
 	
 #ifdef __EMSCRIPTEN__
 	Async::LoadResourcesFromDisk();

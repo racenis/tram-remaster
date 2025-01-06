@@ -3,6 +3,7 @@ decoration 0 test-tram1 0 -192 5.2133393 30 0 3.14 0 0 tatra none
 staticwobj 0 test-tram2 0 -188.52 5.65 12.97 0 3.14 0 crate fullbright 
 staticwobj 0 test-tram3 0 34.46 5.65 100.19 0 3.14 0 crate fullbright 
 decoration 22003 floppa 0 -180 5 25 0 1.56 0 0 floppa floppa-idle 
+signal 22003 activate dingus 0 -1 ping name floppa 
 staticwobj 0 level1 0 0 0 0 0 0 0 NEWMAP lightmap/NEWMAP 
 staticwobj 0 jurarail 0 0 0 0 0 0 0 jura1rail lightmap/jura1rail 
 staticwobj 0 sliede 0 0 0 0 0 0 0 sliede lightmap/sliede 
@@ -49,4 +50,6 @@ decoration 487453829 none 0 -139.86375 5.7903714 14.781853 -3.1415925 0.14644459
 decoration 340954769 none 0 -139.6168 5.849644 14.78934 2.929247 0.060847867 1.7761288 0 snack none 
 decoration 407684847 none 0 -139.42319 5.7903714 14.413615 -1.1051132e-07 1.1174427 -1.6663843e-07 0 snack none 
 decoration 488574259 none 0 -138.66109 5.7903705 14.268676 -3.1415915 1.3951911 -3.1415915 0 snack none 
-marker 124837324 player-start 0 -186.70271 6.625515 35.332626 0 0 0 
+marker 124837324 player-start 0 100.76353 10.380522 134.91617 0 0 0 
+trigger 428893017 none 0 -192.1388 6.296687 38.941765 0 0 0 0 32 crate 
+signal 428893017 activate dingus 0 -1 ping name tram 

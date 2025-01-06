@@ -64,6 +64,7 @@ terrain009 flat linear concrete 1.0 1.0 1.0 0.0 1.0 0.0 same
 terrain010 alpha linear concrete 1.0 1.0 1.0 0.0 1.0 0.0 same
 terrain011 alpha linear concrete 1.0 1.0 1.0 0.0 1.0 0.0 same
 terrain012 flat linear concrete 1.0 1.0 1.0 0.0 1.0 0.0 same
+terrain014 flat linear concrete 0.6 0.7 0.6 0.0 1.0 0.0 same
 vent001 flat linear metal 1.0 1.0 1.0 0.0 1.0 0.0 same
 window003 flat linear metal 1.0 1.0 1.0 0.0 1.0 0.0 same
 window004 flat linear metal 1.0 1.0 1.0 0.0 1.0 0.0 same

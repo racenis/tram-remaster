@@ -22,6 +22,7 @@
 #include <entities/light.h>
 #include <entities/crate.h>
 #include <entities/marker.h>
+#include <entities/trigger.h>
 #include <entities/decoration.h>
 #include <components/player.h>
 #include <components/animation.h>
@@ -48,7 +49,23 @@ enum {
 	BINUGS_WHERE_PEE,
 	BINUGS_PEE_OK,
 	BINUGS_HERE_MILK,
+	
+	FLOPPA_HELLO,
+	FLOPPA_WHATUP,
+	FLOPPA_WHATIS,
+	FLOPPA_OKE,
+	FLOPPA_DIDIT,
+	FLOPPA_WASOKE,
+	FLOPPA_WASNOTOKE,
+	FLOPPA_WASMEH,
+	FLOPPA_WHEREPEE,
+	
+	BINGUS_GIVEMORE,
+	BINGUS_DONEDONE
 };
+
+
+
 
 int dialog = DIALOG_NONE;
 
@@ -59,6 +76,12 @@ bool finish_milk_quest = false;
 bool started_tramming = false;
 bool finished_tramming = false;
 static double time_started_tramming = -1;
+
+bool asked_for_more = false;
+
+bool floppa_whatupped = false;
+bool floppa_agreed = false;
+bool floppa_finished = false;
 
 class LogicController : public Entity {
 public:
@@ -77,6 +100,17 @@ public:
 			dialog = BINGUS_HELLO;
 			
 			UI::SetInputState(UI::STATE_MENU_OPEN);
+		}
+		
+		if (trigger == "floppa") {
+			dialog = FLOPPA_HELLO;
+			
+			UI::SetInputState(UI::STATE_MENU_OPEN);
+		}
+		
+		if (trigger == "tram") {
+			started_tramming = true;
+			time_started_tramming = GetTickTime();
 		}
 		
 		if (trigger == "milk") {
@@ -115,6 +149,7 @@ int main() {
 	Light::Register();
 	Crate::Register();
 	Marker::Register();
+	Trigger::Register();
 	tram::Decoration::Register();
 	Ext::Kitchensink::Button::Register();
 
@@ -307,11 +342,8 @@ int main() {
 	centraltirgus->Load();
 
 	player = new Player;
-	//player->SetLocation(vec3(0.0f, (1.85f/2.0f) + 0.05f, 0.0f));
-	//player->SetLocation(vec3(0.0f, (1.85f/2.0f) + 10.05f, 0.0f));
-	player->SetLocation(Entity::Find("player-start")->GetLocation());
-	//player->SetLocation(Entity::Find("bingus")->GetLocation() + vec3(0, 10, 0));
-	//player->SetLocation(vec3(0.0f, 50.0f, 0.0f));
+	//player->SetLocation(Entity::Find("player-start")->GetLocation());
+	player->SetLocation(Entity::Find("bingus")->GetLocation() + vec3(0, 10, 0));
 	player->Load();
 
 	camera = new Ext::Camera::FirstPersonCamera;
@@ -428,10 +460,79 @@ int main() {
 }
 
 #include <platform/api.h>
+#include <cstring>
+
+void DrawDialogAnswerBox(const char* text) {
+	char textcpy[500];
+	strcpy(textcpy, text);
+	
+	char* lines[10];
+	int line_c = 0;
+	
+	lines[line_c++] = textcpy;
+	
+	for (char* c = textcpy; *c != '\0'; c++) {
+		if (*c == '%' && *(c + 1) == 'n') {
+			*c = '\0';
+			c++;
+			lines[line_c++] = c + 1;
+		}
+	}
+	
+	GUI::PushFrameRelative(GUI::FRAME_TOP, 10 + 16 * line_c);
+	GUI::FillFrame(GUI::WIDGET_REVERSE_WINDOW);
+	GUI::PushFrameRelative(GUI::FRAME_INSET, 5);
+
+	for (int i = 0; i < line_c; i++) {
+		GUI::Text(lines[i]);
+		GUI::NewLine(GUI::LINE_LOW);
+	}
+	
+	
+	GUI::PopFrame();
+	GUI::PopFrame();
+}
+
+bool language_selected = false;
 
 void main_loop() {
 	Core::Update();
 	UI::Update();
+	
+	if (!language_selected) {
+		if (UI::GetInputState() != UI::STATE_MENU_OPEN) {
+			UI::SetInputState(UI::STATE_MENU_OPEN);
+		}
+		
+		GUI::Begin();
+		
+		GUI::PushFrameRelative(GUI::FRAME_CENTER_HORIZONTAL, 200);
+		GUI::PushFrameRelative(GUI::FRAME_CENTER_VERTICAL, 50);
+		
+			if (GUI::Button("Deutsch", true, 200)) {
+				language_selected = true;
+				UI::SetInputState(UI::STATE_DEFAULT);
+				Language::Load("de");
+			}
+			GUI::NewLine();
+		
+			if (GUI::Button("English", true, 200)) {
+				language_selected = true;
+				UI::SetInputState(UI::STATE_DEFAULT);
+				Language::Load("en");
+			}
+			GUI::NewLine();
+			
+			if (GUI::Button("Latviski", true, 200)) {
+				language_selected = true;
+				UI::SetInputState(UI::STATE_DEFAULT);
+			}
+		
+		GUI::PopFrame();
+		GUI::PopFrame();
+	
+		GUI::End();
+	}
 	
 	
 	double start = Platform::Window::GetTime();
@@ -489,55 +590,84 @@ void main_loop() {
 	frames++;
 	
 	
-	/*
-bingus-hello Kas augšā, mājniek?
-bingus-q-whatup Ko notiek?
-bingus-a-whatup Še, piecītis, atnes pienu. No piena veikala. Piena veikalā ir piens.
-bingus-q-wherepee Kur var pačurāt?
-bingus-a-wherepee vnks ieej ezerā un pačurā :DD lol
-bingus-q-pook Hmm.. ok.
-bingus-a-pook Vēl jautājumi?
-bingus-q-kbye Atā
-bingus-q-heremilk Svaigs piens no piena veikala [atdot pienu]
-bingus-a-heremilk Mmmm... piens ....
-*/
+
+	
+	
 	
 	GUI::Begin();
 	Ext::Menu::Update();
+	
+	if (UI::GetInputState() != UI::STATE_MENU_OPEN) dialog = DIALOG_NONE;
 	
 	if (dialog != DIALOG_NONE) {
 		GUI::PushFrameRelative(GUI::FRAME_CENTER_HORIZONTAL, 400);
 		GUI::PushFrameRelative(GUI::FRAME_BOTTOM, 200);
 		
-		GUI::PushFrameRelative(GUI::FRAME_TOP, 25);
-		GUI::FillFrame(GUI::WIDGET_REVERSE_WINDOW);
-		GUI::PushFrameRelative(GUI::FRAME_INSET, 5);
-		//GUI::SetColor(COLOR_WHITE);
-		//GUI::SetFont(Ext::Menu::FONT_TEXT_BOLD);
+		//GUI::PushFrameRelative(GUI::FRAME_TOP, 25);
+		//GUI::FillFrame(GUI::WIDGET_REVERSE_WINDOW);
+		//GUI::PushFrameRelative(GUI::FRAME_INSET, 5);
+		/*switch (dialog) {
+			case DIALOG_NONE:
+	
+			case BINGUS_HELLO:		GUI::Text(Language::Get("bingus-hello")); break;
+			case BINGUS_WHATUP:		GUI::Text(Language::Get("bingus-a-whatup")); break;
+			case BINUGS_WHERE_PEE:	GUI::Text(Language::Get("bingus-a-wherepee")); break;
+			case BINUGS_PEE_OK:		GUI::Text(Language::Get("bingus-a-pook")); break;
+			case BINUGS_HERE_MILK:	GUI::Text(Language::Get("bingus-a-heremilk")); break;
+				
+				
+			case FLOPPA_HELLO:		GUI::Text(Language::Get("floppa-hello")); break;
+			case FLOPPA_WHATUP:		GUI::Text(Language::Get("floppa-a-whatup")); break;
+			case FLOPPA_WHATIS:		GUI::Text(Language::Get("floppa-a-whatis")); break;
+			case FLOPPA_OKE:		GUI::Text(Language::Get("floppa-a-oke")); break;
+			case FLOPPA_DIDIT:		GUI::Text(Language::Get("floppa-a-didit")); break;
+			case FLOPPA_WASOKE:		GUI::Text(Language::Get("floppa-a-wasoke")); break;
+			case FLOPPA_WASNOTOKE:	GUI::Text(Language::Get("floppa-a-wasnotoke")); break;
+			case FLOPPA_WASMEH:		GUI::Text(Language::Get("floppa-a-wasmeh")); break;
+			case FLOPPA_WHEREPEE:	GUI::Text(Language::Get("floppa-a-wherepee")); break;
+			
+			case BINGUS_GIVEMORE:	GUI::Text(Language::Get("bingus-a-givemore")); break;
+			case BINGUS_DONEDONE:	GUI::Text(Language::Get("bingus-a-donedone")); break;
+		}*/
 		switch (dialog) {
 			case DIALOG_NONE:
 	
-			case BINGUS_HELLO:
-				GUI::Text(Language::Get("bingus-hello")); break;
-			case BINGUS_WHATUP:
-				GUI::Text(Language::Get("bingus-a-whatup")); break;
-			case BINUGS_WHERE_PEE:
-				GUI::Text(Language::Get("bingus-a-wherepee")); break;
-			case BINUGS_PEE_OK:
-				GUI::Text(Language::Get("bingus-a-pook")); break;
-			case BINUGS_HERE_MILK:
-				GUI::Text(Language::Get("bingus-a-heremilk")); break;
+			case BINGUS_HELLO:		DrawDialogAnswerBox(Language::Get("bingus-hello")); break;
+			case BINGUS_WHATUP:		DrawDialogAnswerBox(Language::Get("bingus-a-whatup")); break;
+			case BINUGS_WHERE_PEE:	DrawDialogAnswerBox(Language::Get("bingus-a-wherepee")); break;
+			case BINUGS_PEE_OK:		DrawDialogAnswerBox(Language::Get("bingus-a-pook")); break;
+			case BINUGS_HERE_MILK:	DrawDialogAnswerBox(Language::Get("bingus-a-heremilk")); break;
+				
+				
+			case FLOPPA_HELLO:		DrawDialogAnswerBox(Language::Get("floppa-hello")); break;
+			case FLOPPA_WHATUP:		DrawDialogAnswerBox(Language::Get("floppa-a-whatup")); break;
+			case FLOPPA_WHATIS:		DrawDialogAnswerBox(Language::Get("floppa-a-whatis")); break;
+			case FLOPPA_OKE:		DrawDialogAnswerBox(Language::Get("floppa-a-oke")); break;
+			case FLOPPA_DIDIT:		DrawDialogAnswerBox(Language::Get("floppa-a-didit")); break;
+			case FLOPPA_WASOKE:		DrawDialogAnswerBox(Language::Get("floppa-a-wasoke")); break;
+			case FLOPPA_WASNOTOKE:	DrawDialogAnswerBox(Language::Get("floppa-a-wasnotoke")); break;
+			case FLOPPA_WASMEH:		DrawDialogAnswerBox(Language::Get("floppa-a-wasmeh")); break;
+			case FLOPPA_WHEREPEE:	DrawDialogAnswerBox(Language::Get("floppa-a-wherepee")); break;
+			
+			case BINGUS_GIVEMORE:	DrawDialogAnswerBox(Language::Get("bingus-a-givemore")); break;
+			case BINGUS_DONEDONE:	DrawDialogAnswerBox(Language::Get("bingus-a-donedone")); break;
 		}
-		//GUI::RestoreFont();
-		//GUI::RestoreColor();
-		GUI::PopFrame();
-		GUI::PopFrame();
-
-		GUI::NewLine();
-		GUI::NewLine();
 		
+		//GUI::PopFrame();
+		//GUI::PopFrame();
+
+		GUI::NewLine(GUI::LINE_LOW);
+		GUI::NewLine(GUI::LINE_LOW);
+		GUI::NewLine(GUI::LINE_LOW);
+		GUI::NewLine(GUI::LINE_LOW);
+		//GUI::NewLine();
+		
+
 		switch (dialog) {
 			case DIALOG_NONE:
+			
+			case BINGUS_GIVEMORE:
+			case BINGUS_DONEDONE:
 			
 			case BINUGS_HERE_MILK:
 			case BINUGS_PEE_OK:
@@ -560,6 +690,21 @@ bingus-a-heremilk Mmmm... piens ....
 					GUI::NewLine();
 				}
 				
+				if (finish_milk_quest && !asked_for_more) {
+					if (GUI::Button(Language::Get("bingus-q-givemore"))) {
+						asked_for_more = true;
+						dialog = BINGUS_GIVEMORE;
+					}
+					GUI::NewLine();
+				}
+				
+				if (asked_for_more && floppa_finished) {
+					if (GUI::Button(Language::Get("bingus-q-donedone"))) {
+						dialog = BINGUS_DONEDONE;
+					}
+					GUI::NewLine();
+				}
+				
 				if (GUI::Button(Language::Get("bingus-q-wherepee"))) {
 					dialog = BINUGS_WHERE_PEE;
 				}
@@ -578,7 +723,102 @@ bingus-a-heremilk Mmmm... piens ....
 				}
 				
 				break;
+				
+		/*
+
+floppa-hello Jā?
+floppa-q-kbye Atā.
+floppa-q-whatup Ko notiek?
+floppa-a-whatup Es tikko tramvajam baterijas uzlādēju. Negribi izmest loku pa centrifugālo atpienojamo mezglu?
+floppa-q-whatis 0_O Kas ir centrifugālais mezgls?
+floppa-a-whatis Ā nu tu ieliec govi tramvajā un driftē ar viņu uz riņķi. Nu tā. Priekš piena kokteiļiem.
+floppa-q-oke Labi. es  .. "izmetīšu" apli
+floppa-a-oke Novēlu veiksmi .. haha .. >:)
+floppa-q-didit Es izmetu. Apli.
+floppa-a-didit WOW.. es tiešām nedomāju ka tu izdzīvosi ..   . . .. . kā bija?
+floppa-q-wasoke Bija ok..
+floppa-a-wasoke Vecīt...
+floppa-q-wasnotoke Briesmīgi, es izkritu cauri pasaulei!
+floppa-a-wasnotoke Izklausās sāpīgi...
+floppa-q-wasmeh Eh..
+floppa-a-wasmeh Eh........
+floppa-q-wherepee Kur var pačurāt?
+floppa-a-wherepee Uhh.. paprasi bingum.. es parasti čurāju izlietnē... piedod, bet es tev nevaru ļaut izmantot savējo izlietni..
+
+*/		
+				
+			case FLOPPA_HELLO:
+			case FLOPPA_WHATUP:
+			case FLOPPA_WHATIS:
+			case FLOPPA_OKE:
+			case FLOPPA_WASOKE:
+			case FLOPPA_WASNOTOKE:
+			case FLOPPA_WASMEH:
+			case FLOPPA_WHEREPEE:
+			
+			if (!floppa_whatupped) {
+				if (GUI::Button(Language::Get("floppa-q-whatup"))) {
+					dialog = FLOPPA_WHATUP;
+					floppa_whatupped = true;
+				}
+				GUI::NewLine();
+			} else {
+				if (GUI::Button(Language::Get("floppa-q-whatis"))) {
+					dialog = FLOPPA_WHATIS;
+				}
+				GUI::NewLine();
+				
+				if (!floppa_agreed && !floppa_finished) {
+					if (GUI::Button(Language::Get("floppa-q-oke"))) {
+						dialog = FLOPPA_OKE;
+						floppa_agreed = true;
+					}
+					GUI::NewLine();
+				}
+				
+				
+				if (started_tramming && !floppa_finished) {
+					if (GUI::Button(Language::Get("floppa-q-didit"))) {
+						dialog = FLOPPA_DIDIT;
+					}
+					GUI::NewLine();
+				}
+			}
+			
+			if (GUI::Button(Language::Get("floppa-q-wherepee"))) {
+				dialog = FLOPPA_WHEREPEE;
+			}
+			GUI::NewLine();
+			
+			if (GUI::Button(Language::Get("floppa-q-kbye"))) {
+				dialog = DIALOG_NONE;
+				UI::SetInputState(UI::STATE_DEFAULT);
+			}
+			
+			break;
+			
+			case FLOPPA_DIDIT:
+			if (GUI::Button(Language::Get("floppa-q-wasoke"))) {
+				dialog = FLOPPA_WASOKE;
+				floppa_finished = true;
+			}
+			GUI::NewLine();
+			
+			if (GUI::Button(Language::Get("floppa-q-wasnotoke"))) {
+				dialog = FLOPPA_WASNOTOKE;
+				floppa_finished = true;
+			}
+			GUI::NewLine();
+			
+			if (GUI::Button(Language::Get("floppa-q-wasmeh"))) {
+				dialog = FLOPPA_WASMEH;
+				floppa_finished = true;
+			}
+			
+			break;			
 		}
+		
+		
 		
 		GUI::PopFrame();
 		GUI::PopFrame();
@@ -588,10 +828,10 @@ bingus-a-heremilk Mmmm... piens ....
 	GUI::Update();
 	
 	
-	if (GetTickTime() > 5) {started_tramming = true; if(time_started_tramming < 0) {time_started_tramming = GetTickTime();}}
+	//if (GetTickTime() > 5) {started_tramming = true; if(time_started_tramming < 0) {time_started_tramming = GetTickTime();}}
 	
 	if (started_tramming && !finished_tramming) {
-		float speed = 2.0f;
+		float speed = 8.0f;
 		
 		double time_since_started = GetTickTime() - time_started_tramming;
 		
@@ -601,10 +841,10 @@ bingus-a-heremilk Mmmm... piens ....
 		
 		if (GetTick() % 60 == 0) std::cout << GetTickTime() - time_started_tramming << " speed " << speed <<  std::endl;
 		
-		Render::AddLineMarker(tram_follower_a->GetPosition(), Render::COLOR_GREEN);
-		Render::AddLineMarker(tram_follower_b->GetPosition(), Render::COLOR_RED);
+		//Render::AddLineMarker(tram_follower_a->GetPosition(), Render::COLOR_GREEN);
+		//Render::AddLineMarker(tram_follower_b->GetPosition(), Render::COLOR_RED);
 		
-		Path::Find("tram-a")->Draw();
+		//Path::Find("tram-a")->Draw();
 
 		vec3 mid = glm::mix(tram_follower_a->GetPosition(), tram_follower_b->GetPosition(), 0.5f);
 		vec3 dir = glm::normalize(tram_follower_b->GetPosition() - tram_follower_a->GetPosition());
@@ -626,6 +866,10 @@ bingus-a-heremilk Mmmm... piens ....
 		}
 	}
 	
+	
+	if (player->GetLocation().y < -15.0f) {
+		player->SetLocation(Entity::Find("player-start")->GetLocation());
+	}
 	
 	
 #ifdef __EMSCRIPTEN__
